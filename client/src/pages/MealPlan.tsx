@@ -3,67 +3,77 @@ function MealPlan() {
         <>
 
         <table>
-        <tr>
-            <th></th> 
-            <th colSpan={2}>Monday</th>
-            <th colSpan={2}>Tuesday</th>
-            <th colSpan={2}>Wednesday</th>
-            <th colSpan={2}>Thursday</th>
-            <th colSpan={2}>Friday</th>
-            <th colSpan={2}>Saturday</th>
-            <th colSpan={2}>Sunday</th>
-        </tr>
-        <tr>
-            <th>Breakfast</th>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-        </tr>
-        <tr>
-            <th>Lunch</th>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-        </tr>
-        <tr>
-            <th>Dinner</th>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-            <td>Option 1</td>
-            <td>Option 2</td>
-        </tr>
+            <thead>
+                <tr>
+                    <th></th> 
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                    <th>Saturday</th>
+                    <th>Sunday</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <th rowSpan={2}>Breakfast</th>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                </tr>
+                <tr>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                </tr>
+                <tr>
+                <th rowSpan={2}>Lunch</th>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                </tr>
+                <tr>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                </tr>
+                <tr>
+                <th rowSpan={2}>Dinner</th>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                <td className="personA"></td>
+                </tr>
+                <tr>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                <td className="personD"></td>
+                </tr>
+            </tbody>
         </table>
 
 

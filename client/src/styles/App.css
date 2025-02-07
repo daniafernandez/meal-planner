@@ -4,7 +4,7 @@ table {
 }
 
 th, td {
-  border: 1px solid black; /* Adds borders to all cells */
+  border: 1px solid black !important; 
   padding: 8px;
   text-align: center;
 }
@@ -13,4 +13,17 @@ th {
   background-color: lightgray; /* Light gray background for headers */
 }
 
+.personA {
+  background-color: lightgreen;
+  border-left: 2px solid black !important; 
+  border-right: 2px solid black !important; 
+  border-top: 2px solid black !important; 
+}
+
+.personD {
+  background-color: lightpink;
+  border-left: 2px solid black !important; 
+  border-right: 2px solid black !important; 
+  border-bottom: 2px solid black !important; 
+}
 
