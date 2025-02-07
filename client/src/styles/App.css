@@ -13,14 +13,20 @@ th {
   background-color: lightgray; /* Light gray background for headers */
 }
 
-.personA {
+.personCellTop {
   background-color: lightgreen;
   border-left: 2px solid black !important; 
   border-right: 2px solid black !important; 
   border-top: 2px solid black !important; 
 }
 
-.personD {
+.personCellMiddle {
+  background-color: lightpink;
+  border-left: 2px solid black !important; 
+  border-right: 2px solid black !important; 
+}
+
+.personCellBottom {
   background-color: lightpink;
   border-left: 2px solid black !important; 
   border-right: 2px solid black !important; 
@@ -33,7 +39,6 @@ th {
   padding: 2rem;
   box-sizing: border-box;
   display: block; /* Use block layout for full width */
-  border: 1px solid red;
 }
 
 .home {
