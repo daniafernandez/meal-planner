@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import DropDown from "../components/DropDown.tsx"
+import TextInput from '../components/TextInput.tsx';
 
 
 function MealPlan() {
@@ -34,7 +35,7 @@ function MealPlan() {
                 {meals.map((meal, mealIndex) => (
                     <React.Fragment key={mealIndex}>
                         <tr>
-                            <th rowSpan={people.length+1}>{meal}</th>
+                            <th rowSpan={parseInt(selectedOption)}>{meal}</th>
                             {daysOfWeek.map((_, dayIndex) => (
                                 <td key={`${mealIndex}-${dayIndex}`} className="personCellTop">{chef}</td>
                             ))}
@@ -54,10 +55,12 @@ function MealPlan() {
         <DropDown 
             label="Number of People" 
             options={numPeopleOptions} 
-            defaultOption="numPeopleDefaultOption" 
+            defaultOption={numPeopleDefaultOption} 
             onOptionSelect={handleOptionSelect}
         ></DropDown>
-
+        {Array.from({ length: parseInt(selectedOption) }, (_, index) => (
+        <TextInput key={index} label={`Person ${index + 1} Name:`} />
+        ))}
         </>
     );
 }
