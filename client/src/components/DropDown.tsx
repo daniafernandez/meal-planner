@@ -4,13 +4,24 @@ interface Props {
     label: string;
     color?: 'primary' | 'secondary' | 'danger' | 'success'|'close';
     options: string[];
+    defaultOption: string;
+    onOptionSelect: (selectedOption: string) => void; 
   }
   
   
-  export const DropDown = ({ label, color = 'primary', options}: Props) => {
+  export const DropDown = ({ label, color = 'primary', options, defaultOption, onOptionSelect}: Props) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [currentOption, setCurrentOption] = useState(defaultOption);
+
+    const chooseOption = (option: string) => {
+        setCurrentOption(option);
+        onOptionSelect(option);
+        setIsOpen(!isOpen);
+    };
 
     return (
+        <>
+        {label}
         <div className="dropdown">
             <button
                 className={`btn btn-${color} dropdown-toggle`}
@@ -18,18 +29,23 @@ interface Props {
                 aria-haspopup="true"
                 aria-expanded={isOpen}
             >
-                {label}
+                {currentOption}
             </button>
             <div className={`dropdown-menu ${isOpen ? "show" : ""}`} aria-labelledby="dropdownMenuLink">
                 {options.map((option, index) => (
                     <li key={index}>
-                        <a className="dropdown-item" href="#">
+                        <button
+                        className="dropdown-item"
+                        type="button"
+                        onClick={() => chooseOption(option)}
+                        >
                         {option}
-                        </a>
+                        </button>
                     </li>
                 ))}
             </div>
       </div>
+      </>
     );
   };
   

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import DropDown from "../components/DropDown.tsx"
 
 
@@ -9,10 +10,17 @@ function MealPlan() {
     const chef = 'Little Bear'
     const people = ['Austin', 'Dania', 'Moose']
     const numPeopleOptions = ["1","2","3","4","5","6"]
+    const numPeopleDefaultOption = "2"
+
+    const [selectedOption, setSelectedOption] = useState<string>(numPeopleDefaultOption); // Initialize with numPeopleDefaultOption
+
+    const handleOptionSelect = (option: string) => {
+        setSelectedOption(option);  // Update parent state with selected option
+    };
 
     return (
         <>
-
+        <p>{selectedOption}</p>
         <table>
             <thead>
                 <tr>
@@ -43,7 +51,12 @@ function MealPlan() {
             </tbody>
         </table>
 
-        <DropDown label="Number of People" options={numPeopleOptions}></DropDown>
+        <DropDown 
+            label="Number of People" 
+            options={numPeopleOptions} 
+            defaultOption="numPeopleDefaultOption" 
+            onOptionSelect={handleOptionSelect}
+        ></DropDown>
 
         </>
     );
