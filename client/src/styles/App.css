@@ -27,3 +27,17 @@ th {
   border-bottom: 2px solid black !important; 
 }
 
+.main-content {
+  width: 100vw; /* Ensure full viewport width */
+  height: 100vh; /* Ensure full viewport height */
+  padding: 2rem;
+  box-sizing: border-box;
+  display: block; /* Use block layout for full width */
+  border: 1px solid red;
+}
+
+.home {
+  padding: 2rem 0;
+  width: 100%;
+  box-sizing: border-box;
+}

@@ -31,7 +31,10 @@ function Home() {
     
       return (
         <>
-          <h1>My Recipes</h1>
+          <div className="home">
+          <div>
+            <h1>My Recipes</h1>
+          </div>
           <div>
             <Button buttonLabel='My React Button' onClick={fetchRecipes} color="danger"/>
           </div>
@@ -50,6 +53,7 @@ function Home() {
                 </ul>
               </div>
             ))}
+          </div>
           </div>
         </>
       )
