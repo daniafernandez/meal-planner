@@ -14,20 +14,17 @@ th {
 }
 
 .personCellTop {
-  background-color: lightgreen;
   border-left: 2px solid black !important; 
   border-right: 2px solid black !important; 
   border-top: 2px solid black !important; 
 }
 
 .personCellMiddle {
-  background-color: lightpink;
   border-left: 2px solid black !important; 
   border-right: 2px solid black !important; 
 }
 
 .personCellBottom {
-  background-color: lightpink;
   border-left: 2px solid black !important; 
   border-right: 2px solid black !important; 
   border-bottom: 2px solid black !important; 

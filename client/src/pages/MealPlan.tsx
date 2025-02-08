@@ -5,6 +5,16 @@ import TextInput from '../components/TextInput.tsx';
 
 
 function MealPlan() {
+
+    const pastelColors: string[] = [
+        "lightgray", "lavender", "lightblue", "skyblue", "beige", "peachpuff", "lightpink", 
+        "lavenderblush", "palegreen", "lightgreen", "lightcyan", "mistyrose", "lightyellow"
+      ];
+    const [color, setColor] = useState<string>();
+    const colorDefault = "lavender"
+    
+      
+      
     
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const meals = ['Breakfast', 'Lunch', 'Dinner'];
@@ -17,9 +27,16 @@ function MealPlan() {
     const [peopleTotal, setPeopleTotal] = useState<string[]>([]); 
     const peopleExtra = useMemo(() => people.slice(1), [peopleTotal]);
     const [cook, setCook] = useState<string>(people[0] || "");
+    const [tableColors, setTableColors] = useState<string[]>(Array(parseInt(numPeopleDefaultOption)).fill({colorDefault})); 
 
     const handleOptionSelect = (option: string) => {
         setSelectedOption(option);  
+    };
+
+    const handleColorSelect = (index: number, newValue: string) => {
+        const updatedTableColors = [...tableColors];
+        updatedTableColors[index] = newValue;
+        setTableColors(updatedTableColors);  
     };
 
     const handlePersonChange = (index: number, newValue: string) => {
@@ -36,6 +53,12 @@ function MealPlan() {
 
     return (
         <>
+        <p style={{ color: color }}>hello</p>
+        <DropDown 
+            label="Person's Table Color" 
+            options={pastelColors} 
+            defaultOption={pastelColors[1]} 
+            onOptionSelect={handleColorSelect}></DropDown>
         <table>
             <thead>
                 <tr>
@@ -51,13 +74,21 @@ function MealPlan() {
                         <tr>
                             <th rowSpan={parseInt(peopleRows)}>{meal}</th>
                             {daysOfWeek.map((_, dayIndex) => (
-                                <td key={`${mealIndex}-${dayIndex}`} className="personCellTop">{cook}</td>
+                                <td 
+                                    key={`${mealIndex}-${dayIndex}`} 
+                                    className="personCellTop"
+                                    style={{backgroundColor: tableColors[0]}}>
+                                        {cook}
+                                    </td>
                             ))}
                         </tr>
                         {peopleExtra.map((person, personIndex) => (
                             <tr key={`${mealIndex}-${personIndex}`}>
                                  {daysOfWeek.map((_, dayIndex) => (
-                                <td key={`${mealIndex + 1}-${personIndex}-${dayIndex}`} className={personIndex === peopleExtra.length-1 ? "personCellBottom":"personCellMiddle"}>{person}</td>
+                                <td 
+                                    key={`${mealIndex + 1}-${personIndex}-${dayIndex}`} 
+                                    className={personIndex === peopleExtra.length-1 ? "personCellBottom":"personCellMiddle"} 
+                                    style={{backgroundColor: tableColors[personIndex+1]}}>{person}</td>
                             ))}
                             </tr>
                         ))}
@@ -73,12 +104,20 @@ function MealPlan() {
             onOptionSelect={handleOptionSelect}
         ></DropDown>
         {Array.from({ length: parseInt(selectedOption) }, (_, index) => (
-        <TextInput 
-            key={index} 
-            label={`Person ${index + 1} Name:`} 
-            value={people[index] || ""}
-            onChange={(newValue) => handlePersonChange(index, newValue)}
-        />
+            <React.Fragment key={index}>
+                <TextInput 
+                    key={index} 
+                    label={`Person ${index + 1} Name:`} 
+                    value={people[index] || ""}
+                    onChange={(newValue) => handlePersonChange(index, newValue)}
+                />
+                <DropDown 
+                label="Table Cell Color"
+                options={pastelColors} 
+                defaultOption={pastelColors[1]} 
+                onOptionSelect={(newValue) => handleColorSelect(index, newValue)}></DropDown>
+                <p style={{color: tableColors[index]}}>color</p>
+            </React.Fragment>
         ))}
         <button
             type="button"
