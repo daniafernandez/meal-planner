@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import DropDown from "../components/DropDown.tsx"
 import TextInput from '../components/TextInput.tsx';
 
@@ -8,25 +8,34 @@ function MealPlan() {
     
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const meals = ['Breakfast', 'Lunch', 'Dinner'];
-    const chef = 'Little Bear'
-    const peoplex = ['Austin', 'Dania', 'Moose']
     const numPeopleOptions = ["1","2","3","4","5","6"]
-    const numPeopleDefaultOption = "2"
+    const numPeopleDefaultOption = "1"
 
     const [selectedOption, setSelectedOption] = useState<string>(numPeopleDefaultOption); 
-    const [peopleFinal, setPeopleFinal] = useState<string[]>([]); 
+    const [peopleRows, setPeopleRows] = useState<string>('1'); 
+    const [people, setPeople] = useState<string[]>(Array(parseInt(numPeopleDefaultOption)).fill(""));
+    const [peopleTotal, setPeopleTotal] = useState<string[]>([]); 
+    const peopleExtra = useMemo(() => people.slice(1), [peopleTotal]);
+    const [cook, setCook] = useState<string>(people[0] || "");
 
     const handleOptionSelect = (option: string) => {
         setSelectedOption(option);  
     };
 
+    const handlePersonChange = (index: number, newValue: string) => {
+        const updatedPeople = [...people];
+        updatedPeople[index] = newValue;
+        setPeople(updatedPeople);
+    };
+
     const applyNames = () => {
-        setPeopleFinal(peoplex);  
+        setPeopleTotal(people);  
+        setCook(people[0] || "");
+        setPeopleRows(selectedOption)
     };
 
     return (
         <>
-        <p>{selectedOption}</p>
         <table>
             <thead>
                 <tr>
@@ -40,15 +49,15 @@ function MealPlan() {
                 {meals.map((meal, mealIndex) => (
                     <React.Fragment key={mealIndex}>
                         <tr>
-                            <th rowSpan={parseInt(selectedOption)}>{meal}</th>
+                            <th rowSpan={parseInt(peopleRows)}>{meal}</th>
                             {daysOfWeek.map((_, dayIndex) => (
-                                <td key={`${mealIndex}-${dayIndex}`} className="personCellTop">{chef}</td>
+                                <td key={`${mealIndex}-${dayIndex}`} className="personCellTop">{cook}</td>
                             ))}
                         </tr>
-                        {peopleFinal.map((person, personIndex) => (
+                        {peopleExtra.map((person, personIndex) => (
                             <tr key={`${mealIndex}-${personIndex}`}>
                                  {daysOfWeek.map((_, dayIndex) => (
-                                <td key={`${mealIndex + 1}-${personIndex}-${dayIndex}`} className={personIndex === peopleFinal.length-1 ? "personCellBottom":"personCellMiddle"}>{person}</td>
+                                <td key={`${mealIndex + 1}-${personIndex}-${dayIndex}`} className={personIndex === peopleExtra.length-1 ? "personCellBottom":"personCellMiddle"}>{person}</td>
                             ))}
                             </tr>
                         ))}
@@ -67,7 +76,8 @@ function MealPlan() {
         <TextInput 
             key={index} 
             label={`Person ${index + 1} Name:`} 
-            onInput={applyNames}
+            value={people[index] || ""}
+            onChange={(newValue) => handlePersonChange(index, newValue)}
         />
         ))}
         <button
