@@ -15,6 +15,7 @@ function MealPlan() {
     
       const [recipes, setRecipes] = useState<RecipeDetails[]>([]);
       const recipeOptions = recipes.map(recipe => recipe.name);
+      
     
       const fetchRecipes = () => {
         axios
@@ -33,17 +34,43 @@ function MealPlan() {
       }, []);
 
       interface GroceryList {
-        ingredient: string;
-        quantity: number;
+        [ingredient: string]: number;
       }
-      const [grocerylist, setGroceryList] = useState<GroceryList[]>([]);
+
+      type Day = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday";
+      type Meals = Record<Day, string[]>; 
+      type MealPlan = {
+        Breakfast: Meals;
+        Lunch: Meals;
+        Dinner: Meals;
+      };
+      const [mealPlan, setMealPlan] = useState<MealPlan>({
+        Breakfast: {
+          Monday: [""], Tuesday: [""], Wednesday: [""], Thursday: [""], Friday: [""], Saturday: [""], Sunday: [""]
+        },
+        Lunch: {
+          Monday: [""], Tuesday: [""], Wednesday: [""], Thursday: [""], Friday: [""], Saturday: [""], Sunday: [""]
+        },
+        Dinner: {
+          Monday: [""], Tuesday: [""], Wednesday: [""], Thursday: [""], Friday: [""], Saturday: [""], Sunday: [""]
+        }
+      });
+      
+
+
+      const [groceryList, setGroceryList] = useState<GroceryList[]>([]);
 
       const buildGroceryList = () => {
+        const dataToSend = {
+            mealPlan: mealPlan,  
+            recipes: recipes     
+        };
         axios
-          .get("http://127.0.0.1:5000/grocerylist")
+          .post("http://127.0.0.1:5000/grocerylist", dataToSend)
           .then((response) => {
             console.log(response);
             setGroceryList(response.data);
+            console.log(groceryList)
           })
           .catch((error) => {
             console.error("Error building grocery list:", error);
@@ -57,6 +84,7 @@ function MealPlan() {
     const colorDefault = pastelColors[2]
       
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const DaysOfWeek: Day[] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     const meals = ['Breakfast', 'Lunch', 'Dinner'];
     const numPeopleOptions = ["1","2","3","4","5","6"]
     const numPeopleDefaultOption = "1"
@@ -89,7 +117,31 @@ function MealPlan() {
         setPeopleTotal(people);  
         setCook(people[0] || "");
         setPeopleRows(selectedOption)
-        //setTableColors(Array(parseInt(selectedOption)).fill(colorDefault));
+        initializeDayArrays((people.length))
+    };
+
+    const initializeDayArrays = (len: number) => {
+        const updatedMealPlan = {...mealPlan}
+        for (const [meal, days] of Object.entries(updatedMealPlan)) {
+            const typedMeal = meal as "Breakfast" | "Lunch" | "Dinner";
+            for (const [day, _] of Object.entries(days)) {
+              const typedDay = day as Day;
+              updatedMealPlan[typedMeal][typedDay] = new Array(len).fill("")
+            }
+          }
+    }
+
+    //need to add is cook param to avoid adding 1 to personidx for cook (actual 0)
+    const handleRecipeSelect = (mealIdx: number, dayIdx: number, personIdx: number, isCook: boolean, newValue: string) => {
+        const updatedMealPlan = {...mealPlan}
+        const mealType = meals[mealIdx] as keyof MealPlan; 
+        const day: Day = DaysOfWeek[dayIdx] as Day
+        const adjustedPersonIdx = isCook? personIdx : personIdx + 1
+        updatedMealPlan[mealType][day][adjustedPersonIdx] = newValue;
+        setMealPlan(updatedMealPlan);
+        console.log(mealPlan);
+        buildGroceryList();
+        
     };
 
     return (
@@ -130,7 +182,7 @@ function MealPlan() {
                                         type={"light"}
                                         options={recipeOptions} 
                                         defaultOption={recipeOptions[0]} 
-                                        onOptionSelect={handleOptionSelect}
+                                        onOptionSelect={(newValue) => handleRecipeSelect(mealIndex, dayIndex, 0, true, newValue)}
                                     ></DropDown>
                                 </td>
                             ))}
@@ -147,7 +199,7 @@ function MealPlan() {
                                         type={"light"}
                                         options={recipeOptions} 
                                         defaultOption={recipeOptions[0]} 
-                                        onOptionSelect={handleOptionSelect}
+                                        onOptionSelect={(newValue) => handleRecipeSelect(mealIndex, dayIndex, personIndex, false, newValue)}
                                     ></DropDown>
                                     </td>
                             ))}
@@ -187,7 +239,25 @@ function MealPlan() {
             onClick={applyNames}
             >
             Apply Names
-            </button>
+        </button>
+        <div className="p-4 max-w-md mx-auto">
+        <h2 className="text-xl font-semibold mb-4">Grocery List</h2>
+        <ul>
+            {Object.entries(groceryList).map(([ingredient, quantity]) => (
+            <li key={ingredient} className="flex justify-between border-b py-2">
+                {Number(quantity) > 0 ? (
+                    <React.Fragment key={ingredient}>
+                        <span className="font-medium">{ingredient}: </span>
+                        <span>{String(quantity)}</span>
+                    </React.Fragment>
+                ) : (
+                    <span className="font-medium">{ingredient} </span>
+                )}
+            </li>
+            ))}
+        </ul>
+        </div>
+            
         </>
     );
 }
