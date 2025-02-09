@@ -2,14 +2,14 @@ import { useState } from "react";
 
 interface Props {
     label: string;
-    color?: 'primary' | 'secondary' | 'danger' | 'success'|'close';
+    type?: 'primary' | 'secondary' | 'danger' | 'success' | 'close' | 'link' | 'light';
     options: string[];
     defaultOption: string;
     onOptionSelect: (selectedOption: string) => void; 
   }
   
   
-  export const DropDown = ({ label, color = 'primary', options, defaultOption, onOptionSelect}: Props) => {
+  export const DropDown = ({ label, type = 'primary', options, defaultOption, onOptionSelect}: Props) => {
     const [isOpen, setIsOpen] = useState(false);
     const [currentOption, setCurrentOption] = useState(defaultOption);
 
@@ -24,7 +24,7 @@ interface Props {
         {label}
         <div className="dropdown">
             <button
-                className={`btn btn-${color} dropdown-toggle`}
+                className={`btn btn-${type} dropdown-toggle`}
                 onClick={() => setIsOpen(!isOpen)}
                 aria-haspopup="true"
                 aria-expanded={isOpen}

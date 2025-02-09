@@ -32,6 +32,24 @@ function MealPlan() {
         fetchRecipes();
       }, []);
 
+      interface GroceryList {
+        ingredient: string;
+        quantity: number;
+      }
+      const [grocerylist, setGroceryList] = useState<GroceryList[]>([]);
+
+      const buildGroceryList = () => {
+        axios
+          .get("http://127.0.0.1:5000/grocerylist")
+          .then((response) => {
+            console.log(response);
+            setGroceryList(response.data);
+          })
+          .catch((error) => {
+            console.error("Error building grocery list:", error);
+          });
+      }
+
     const pastelColors: string[] = [
         "lightgray", "lavender", "lightblue", "skyblue", "beige", "peachpuff", "lightpink", 
         "lavenderblush", "palegreen", "lightgreen", "lightcyan", "mistyrose", "lightyellow"
@@ -109,6 +127,7 @@ function MealPlan() {
                                     style={{backgroundColor: tableColors[0]}}>
                                         <DropDown 
                                         label="" 
+                                        type={"light"}
                                         options={recipeOptions} 
                                         defaultOption={recipeOptions[0]} 
                                         onOptionSelect={handleOptionSelect}
@@ -116,7 +135,7 @@ function MealPlan() {
                                 </td>
                             ))}
                         </tr>
-                        {peopleExtra.map((person, personIndex) => (
+                        {peopleExtra.map((_, personIndex) => (
                             <tr key={`${mealIndex}-${personIndex}`}>
                                  {daysOfWeek.map((_, dayIndex) => (
                                 <td 
@@ -125,6 +144,7 @@ function MealPlan() {
                                     style={{backgroundColor: tableColors[personIndex+1]}}>
                                         <DropDown 
                                         label="" 
+                                        type={"light"}
                                         options={recipeOptions} 
                                         defaultOption={recipeOptions[0]} 
                                         onOptionSelect={handleOptionSelect}
@@ -158,7 +178,6 @@ function MealPlan() {
                     options={pastelColors} 
                     defaultOption={colorDefault} 
                     onOptionSelect={(newValue) => handleColorSelect(index, newValue)}></DropDown>
-                    <p style={{color: tableColors[index]}}>color</p>
                 </React.Fragment>
                 </div>
         ))}
