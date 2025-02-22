@@ -113,11 +113,32 @@ function MealPlan() {
         setPeople(updatedPeople);
     };
 
+    const checkNames = () => {
+        console.log(selectedOption);
+        console.log(people.length);
+        console.log(people);
+        if (people.length != Number(selectedOption)) {
+            console.log("immediate false")
+            return true
+        }
+        else {
+            for (var i=0; i < people.length; i++) {
+                if (people[i].length < 1) {
+                    console.log("late false")
+                    return true
+                }
+            }
+        }
+        return false
+
+    };
+
     const applyNames = () => {
         setPeopleTotal(people);  
         setCook(people[0] || "");
         setPeopleRows(selectedOption)
         initializeDayArrays((people.length))
+        
     };
 
     const initializeDayArrays = (len: number) => {
@@ -181,7 +202,7 @@ function MealPlan() {
                                         label="" 
                                         type={"light"}
                                         options={recipeOptions} 
-                                        defaultOption={recipeOptions[0]} 
+                                        defaultOption='' 
                                         onOptionSelect={(newValue) => handleRecipeSelect(mealIndex, dayIndex, 0, true, newValue)}
                                     ></DropDown>
                                 </td>
@@ -198,7 +219,7 @@ function MealPlan() {
                                         label="" 
                                         type={"light"}
                                         options={recipeOptions} 
-                                        defaultOption={recipeOptions[0]} 
+                                        defaultOption=''
                                         onOptionSelect={(newValue) => handleRecipeSelect(mealIndex, dayIndex, personIndex, false, newValue)}
                                     ></DropDown>
                                     </td>
@@ -236,6 +257,7 @@ function MealPlan() {
         <button
             type="button"
             className={"btn btn-primary"}
+            disabled={checkNames()}
             onClick={applyNames}
             >
             Apply Names
