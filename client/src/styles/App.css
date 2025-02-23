@@ -25,6 +25,7 @@ th {
   color: #F8F8FF;
   border-color: #EF626C;
   border-radius: 15px;
+  width: 150px;
 }
 
 .personCellTop {
@@ -62,4 +63,10 @@ th {
   display: "flex";
   justify-content: "center";
   align-items: "center";
+}
+
+.dropdownContainer {
+  display: flex;
+  align-items: center; 
+  gap: 10px;
 }

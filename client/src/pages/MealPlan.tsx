@@ -4,8 +4,6 @@ import axios from "axios";
 import DropDown from "../components/DropDown.tsx"
 import TextInput from '../components/TextInput.tsx';
 import Modal from "../components/Modal.tsx";
-import Button from "../components/Button.tsx";
-
 
 function MealPlan() {
 
@@ -113,6 +111,7 @@ function MealPlan() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+
     const handleOptionSelect = (option: string) => {
         setSelectedNumPeopleOption(option); 
         let updatedTableColors = [...tableColors];
@@ -176,9 +175,7 @@ function MealPlan() {
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <button
                 onClick={() => {
-                    console.log("opening modal...")
                     setIsModalOpen(true);
-                    console.log(isModalOpen);
                 }}
                 className='btn btn-primary'
             >
@@ -186,32 +183,38 @@ function MealPlan() {
             </button>
         </div>
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Edit Members of Your Household">
-            <DropDown 
-                label="Number of People" 
-                options={numPeopleOptions} 
-                defaultOption={numPeopleDefaultOption} 
-                onOptionSelect={handleOptionSelect}
-            ></DropDown>
-            {Array.from({ length: parseInt(selectedNumPeopleOption) }, (_, index) => (
-                <div key={index} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                    <React.Fragment key={index}>
-                        <TextInput 
-                            key={index} 
-                            label={`Person ${index + 1} Name:`} 
-                            value={people[index] || ""}
-                            onChange={(newValue) => handlePersonChange(index, newValue)}
-                        />
-                        <DropDown 
-                        label=""
-                        options={pastelColors} 
-                        defaultOption={colorDefault} 
-                        onOptionSelect={(newValue) => handleColorSelect(index, newValue)}></DropDown>
-                    </React.Fragment>
-                    </div>
-            ))}
-            <button onClick={() => setIsModalOpen(false)}  className='btn btn-secondary'>
-            Done
-            </button>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+                <DropDown 
+                    label="Household Size" 
+                    options={numPeopleOptions} 
+                    defaultOption={numPeopleDefaultOption} 
+                    onOptionSelect={handleOptionSelect}
+                ></DropDown>
+            </div>
+            <div style={{ maxWidth: "500px", display: "flex", flexDirection: "column", gap: "10px"}}>
+                {Array.from({ length: parseInt(selectedNumPeopleOption) }, (_, index) => (
+                    <div key={index} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <React.Fragment key={index}>
+                            <TextInput 
+                                key={index} 
+                                label={`Name:`} 
+                                value={people[index] || ""}
+                                onChange={(newValue) => handlePersonChange(index, newValue)}
+                            />
+                            <DropDown 
+                            label=""
+                            options={pastelColors} 
+                            defaultOption={colorDefault} 
+                            onOptionSelect={(newValue) => handleColorSelect(index, newValue)}></DropDown>
+                        </React.Fragment>
+                        </div>
+                ))}
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px'}}>
+                <button style={{maxWidth:"100px"}} onClick={() => setIsModalOpen(false)}  className='btn btn-secondary'>
+                Done
+                </button>
+            </div>
         </Modal>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
         {people.map((person, personIndex) => (
@@ -285,11 +288,11 @@ function MealPlan() {
             <li key={ingredient} className="flex justify-between border-b py-2">
                 {Number(quantity) > 0 ? (
                     <React.Fragment key={ingredient}>
-                        <span className="font-medium">{ingredient}: </span>
+                        <span className="font-medium"><strong>{ingredient}: </strong></span>
                         <span>{String(quantity)}</span>
                     </React.Fragment>
                 ) : (
-                    <span className="font-medium">{ingredient} </span>
+                    <span className="font-medium"><strong>{ingredient} </strong></span>
                 )}
             </li>
             ))}

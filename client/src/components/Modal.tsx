@@ -15,7 +15,6 @@ function Modal({ isOpen, onClose, title, children }: ModalProps) {
     <div className="modal-overlay">
       <div className="modal-content">
         {children}
-        <button onClick={onClose}>Close</button>
       </div>   
     </div>
   );
