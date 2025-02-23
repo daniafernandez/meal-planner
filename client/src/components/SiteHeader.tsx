@@ -9,7 +9,10 @@ function SiteHeader() {
                 <h2 className="title">Household Meal Planner</h2>
             </div>
             <div className="navbar-links">
-                <Link to="/mealplan" className="nav-link">Meal Plan</Link> 
+                <Link to="/" className="nav-link">Meal Plan</Link> 
+            </div>
+            <div className="navbar-links">
+                <Link to="/recipes" className="nav-link">My Recipes</Link> 
             </div>
           </nav>
         </>
