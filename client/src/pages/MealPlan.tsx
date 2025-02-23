@@ -89,16 +89,31 @@ function MealPlan() {
     const numPeopleOptions = ["1","2","3","4","5","6"]
     const numPeopleDefaultOption = "1"
 
-    const [selectedOption, setSelectedOption] = useState<string>(numPeopleDefaultOption); 
-    const [peopleRows, setPeopleRows] = useState<string>('1'); 
+    const [selectedNumPeopleOption, setSelectedNumPeopleOption] = useState<string>(numPeopleDefaultOption); 
     const [people, setPeople] = useState<string[]>(Array(parseInt(numPeopleDefaultOption)).fill(""));
-    const [peopleTotal, setPeopleTotal] = useState<string[]>([]); 
-    const peopleExtra = useMemo(() => people.slice(1), [peopleTotal]);
+    const peopleExtra = useMemo(() => people.slice(1), [people]);
     const [cook, setCook] = useState<string>(people[0] || "");
     const [tableColors, setTableColors] = useState<string[]>(Array(parseInt(numPeopleDefaultOption)).fill(colorDefault)); 
 
     const handleOptionSelect = (option: string) => {
-        setSelectedOption(option);  
+        setSelectedNumPeopleOption(option); 
+        let updatedTableColors = [...tableColors];
+        for (var i=tableColors.length; i < Number(option); i++) {
+            updatedTableColors[i] = colorDefault;
+        }
+        console.log(updatedTableColors);
+        updatedTableColors = updatedTableColors.slice(0, Number(option));
+        console.log(updatedTableColors);
+        setTableColors(updatedTableColors);  
+        
+        // update people 
+        let updatedPeople = [...people];
+        updatedPeople = updatedPeople.slice(0,Number(option));
+        for (var i=people.length; i < Number(option); i++) {
+            updatedPeople.push('')
+        }
+        setPeople(updatedPeople);
+        console.log(people)
     };
 
     const handleColorSelect = (index: number, newValue: string) => {
@@ -113,33 +128,6 @@ function MealPlan() {
         setPeople(updatedPeople);
     };
 
-    const checkNames = () => {
-        console.log(selectedOption);
-        console.log(people.length);
-        console.log(people);
-        if (people.length != Number(selectedOption)) {
-            console.log("immediate false")
-            return true
-        }
-        else {
-            for (var i=0; i < people.length; i++) {
-                if (people[i].length < 1) {
-                    console.log("late false")
-                    return true
-                }
-            }
-        }
-        return false
-
-    };
-
-    const applyNames = () => {
-        setPeopleTotal(people);  
-        setCook(people[0] || "");
-        setPeopleRows(selectedOption)
-        initializeDayArrays((people.length))
-        
-    };
 
     const initializeDayArrays = (len: number) => {
         const updatedMealPlan = {...mealPlan}
@@ -168,7 +156,7 @@ function MealPlan() {
     return (
         <>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        {peopleTotal.map((person, personIndex) => (
+        {people.map((person, personIndex) => (
                 <React.Fragment key={personIndex}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill={tableColors[personIndex]} className="bi bi-circle-fill" viewBox="0 0 16 16">
                         <circle cx="8" cy="8" r="8"/>
@@ -192,7 +180,7 @@ function MealPlan() {
                 {meals.map((meal, mealIndex) => (
                     <React.Fragment key={mealIndex}>
                         <tr>
-                            <th rowSpan={parseInt(peopleRows)}>{meal}</th>
+                            <th rowSpan={parseInt(selectedNumPeopleOption)}>{meal}</th>
                             {daysOfWeek.map((_, dayIndex) => (
                                 <td 
                                     key={`${mealIndex}-${dayIndex}`} 
@@ -237,7 +225,7 @@ function MealPlan() {
             defaultOption={numPeopleDefaultOption} 
             onOptionSelect={handleOptionSelect}
         ></DropDown>
-        {Array.from({ length: parseInt(selectedOption) }, (_, index) => (
+        {Array.from({ length: parseInt(selectedNumPeopleOption) }, (_, index) => (
             <div key={index} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <React.Fragment key={index}>
                     <TextInput 
@@ -254,14 +242,6 @@ function MealPlan() {
                 </React.Fragment>
                 </div>
         ))}
-        <button
-            type="button"
-            className={"btn btn-primary"}
-            disabled={checkNames()}
-            onClick={applyNames}
-            >
-            Apply Names
-        </button>
         <div className="p-4 max-w-md mx-auto">
         <h2 className="text-xl font-semibold mb-4">Grocery List</h2>
         <ul>
