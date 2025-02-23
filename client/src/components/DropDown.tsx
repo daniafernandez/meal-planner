@@ -21,8 +21,8 @@ interface Props {
 
     return (
         <>
-        {label}
-        <div className="dropdown">
+        <div className="dropdownContainer">
+            {label}
             <button
                 className={`btn btn-${type} dropdown-toggle`}
                 onClick={() => setIsOpen(!isOpen)}

@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from 'react';
 import axios from "axios";
 import DropDown from "../components/DropDown.tsx"
 import TextInput from '../components/TextInput.tsx';
-
+import Modal from "../components/Modal.tsx";
 
 function MealPlan() {
 
@@ -77,10 +77,24 @@ function MealPlan() {
           });
       }
 
-    const pastelColors: string[] = [
-        "lightgray", "lavender", "lightblue", "skyblue", "beige", "peachpuff", "lightpink", 
-        "lavenderblush", "palegreen", "lightgreen", "lightcyan", "mistyrose", "lightyellow"
+      const pastelColors: string[] = [
+        "darkseagreen",
+        "lightyellow",
+        "lightblue",
+        "mediumblue",
+        "slateblue",
+        "mediumturquoise",
+        "lavender",
+        "mediumseagreen",
+        "rebeccapurple",
+        "midnightblue",
+        "darkslategray",
+        "goldenrod",
+        "darkred",
+        "thistle",
+        "darkgreen"
       ];
+      
     const colorDefault = pastelColors[2]
       
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -89,16 +103,34 @@ function MealPlan() {
     const numPeopleOptions = ["1","2","3","4","5","6"]
     const numPeopleDefaultOption = "1"
 
-    const [selectedOption, setSelectedOption] = useState<string>(numPeopleDefaultOption); 
-    const [peopleRows, setPeopleRows] = useState<string>('1'); 
+    const [selectedNumPeopleOption, setSelectedNumPeopleOption] = useState<string>(numPeopleDefaultOption); 
     const [people, setPeople] = useState<string[]>(Array(parseInt(numPeopleDefaultOption)).fill(""));
-    const [peopleTotal, setPeopleTotal] = useState<string[]>([]); 
-    const peopleExtra = useMemo(() => people.slice(1), [peopleTotal]);
+    const peopleExtra = useMemo(() => people.slice(1), [people]);
     const [cook, setCook] = useState<string>(people[0] || "");
     const [tableColors, setTableColors] = useState<string[]>(Array(parseInt(numPeopleDefaultOption)).fill(colorDefault)); 
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+
     const handleOptionSelect = (option: string) => {
-        setSelectedOption(option);  
+        setSelectedNumPeopleOption(option); 
+        let updatedTableColors = [...tableColors];
+        for (var i=tableColors.length; i < Number(option); i++) {
+            updatedTableColors[i] = colorDefault;
+        }
+        console.log(updatedTableColors);
+        updatedTableColors = updatedTableColors.slice(0, Number(option));
+        console.log(updatedTableColors);
+        setTableColors(updatedTableColors);  
+        
+        // update people 
+        let updatedPeople = [...people];
+        updatedPeople = updatedPeople.slice(0,Number(option));
+        for (var i=people.length; i < Number(option); i++) {
+            updatedPeople.push('')
+        }
+        setPeople(updatedPeople);
+        console.log(people)
     };
 
     const handleColorSelect = (index: number, newValue: string) => {
@@ -113,12 +145,6 @@ function MealPlan() {
         setPeople(updatedPeople);
     };
 
-    const applyNames = () => {
-        setPeopleTotal(people);  
-        setCook(people[0] || "");
-        setPeopleRows(selectedOption)
-        initializeDayArrays((people.length))
-    };
 
     const initializeDayArrays = (len: number) => {
         const updatedMealPlan = {...mealPlan}
@@ -146,8 +172,52 @@ function MealPlan() {
 
     return (
         <>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <button
+                onClick={() => {
+                    setIsModalOpen(true);
+                }}
+                className='btn btn-primary'
+            >
+                Edit Members
+            </button>
+        </div>
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Edit Members of Your Household">
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+                <DropDown 
+                    label="Household Size" 
+                    options={numPeopleOptions} 
+                    defaultOption={numPeopleDefaultOption} 
+                    onOptionSelect={handleOptionSelect}
+                ></DropDown>
+            </div>
+            <div style={{ maxWidth: "500px", display: "flex", flexDirection: "column", gap: "10px"}}>
+                {Array.from({ length: parseInt(selectedNumPeopleOption) }, (_, index) => (
+                    <div key={index} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <React.Fragment key={index}>
+                            <TextInput 
+                                key={index} 
+                                label={`Name:`} 
+                                value={people[index] || ""}
+                                onChange={(newValue) => handlePersonChange(index, newValue)}
+                            />
+                            <DropDown 
+                            label=""
+                            options={pastelColors} 
+                            defaultOption={colorDefault} 
+                            onOptionSelect={(newValue) => handleColorSelect(index, newValue)}></DropDown>
+                        </React.Fragment>
+                        </div>
+                ))}
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px'}}>
+                <button style={{maxWidth:"100px"}} onClick={() => setIsModalOpen(false)}  className='btn btn-secondary'>
+                Done
+                </button>
+            </div>
+        </Modal>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        {peopleTotal.map((person, personIndex) => (
+        {people.map((person, personIndex) => (
                 <React.Fragment key={personIndex}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill={tableColors[personIndex]} className="bi bi-circle-fill" viewBox="0 0 16 16">
                         <circle cx="8" cy="8" r="8"/>
@@ -158,88 +228,59 @@ function MealPlan() {
                 </React.Fragment>
         ))}
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    {daysOfWeek.map((day, index) => (
-                        <th key={index}>{day}</th>
-                    ))}
-                </tr>
-            </thead>
-            <tbody>
-                {meals.map((meal, mealIndex) => (
-                    <React.Fragment key={mealIndex}>
-                        <tr>
-                            <th rowSpan={parseInt(peopleRows)}>{meal}</th>
-                            {daysOfWeek.map((_, dayIndex) => (
-                                <td 
-                                    key={`${mealIndex}-${dayIndex}`} 
-                                    className="personCellTop"
-                                    style={{backgroundColor: tableColors[0]}}>
-                                        <DropDown 
-                                        label="" 
-                                        type={"light"}
-                                        options={recipeOptions} 
-                                        defaultOption={recipeOptions[0]} 
-                                        onOptionSelect={(newValue) => handleRecipeSelect(mealIndex, dayIndex, 0, true, newValue)}
-                                    ></DropDown>
-                                </td>
-                            ))}
-                        </tr>
-                        {peopleExtra.map((_, personIndex) => (
-                            <tr key={`${mealIndex}-${personIndex}`}>
-                                 {daysOfWeek.map((_, dayIndex) => (
-                                <td 
-                                    key={`${mealIndex + 1}-${personIndex}-${dayIndex}`} 
-                                    className={personIndex === peopleExtra.length-1 ? "personCellBottom":"personCellMiddle"} 
-                                    style={{backgroundColor: tableColors[personIndex+1]}}>
-                                        <DropDown 
-                                        label="" 
-                                        type={"light"}
-                                        options={recipeOptions} 
-                                        defaultOption={recipeOptions[0]} 
-                                        onOptionSelect={(newValue) => handleRecipeSelect(mealIndex, dayIndex, personIndex, false, newValue)}
-                                    ></DropDown>
-                                    </td>
-                            ))}
-                            </tr>
+        <div className='tableRound'>
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        {daysOfWeek.map((day, index) => (
+                            <th key={index}>{day}</th>
                         ))}
-                    </React.Fragment>
-                ))}
-            </tbody>
-        </table>
-
-        <DropDown 
-            label="Number of People" 
-            options={numPeopleOptions} 
-            defaultOption={numPeopleDefaultOption} 
-            onOptionSelect={handleOptionSelect}
-        ></DropDown>
-        {Array.from({ length: parseInt(selectedOption) }, (_, index) => (
-            <div key={index} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <React.Fragment key={index}>
-                    <TextInput 
-                        key={index} 
-                        label={`Person ${index + 1} Name:`} 
-                        value={people[index] || ""}
-                        onChange={(newValue) => handlePersonChange(index, newValue)}
-                    />
-                    <DropDown 
-                    label=""
-                    options={pastelColors} 
-                    defaultOption={colorDefault} 
-                    onOptionSelect={(newValue) => handleColorSelect(index, newValue)}></DropDown>
-                </React.Fragment>
-                </div>
-        ))}
-        <button
-            type="button"
-            className={"btn btn-primary"}
-            onClick={applyNames}
-            >
-            Apply Names
-        </button>
+                    </tr>
+                </thead>
+                <tbody>
+                    {meals.map((meal, mealIndex) => (
+                        <React.Fragment key={mealIndex}>
+                            <tr>
+                                <th rowSpan={parseInt(selectedNumPeopleOption)}>{meal}</th>
+                                {daysOfWeek.map((_, dayIndex) => (
+                                    <td 
+                                        key={`${mealIndex}-${dayIndex}`} 
+                                        className="personCellTop"
+                                        style={{backgroundColor: tableColors[0]}}>
+                                            <DropDown 
+                                            label="" 
+                                            type={"light"}
+                                            options={recipeOptions} 
+                                            defaultOption='' 
+                                            onOptionSelect={(newValue) => handleRecipeSelect(mealIndex, dayIndex, 0, true, newValue)}
+                                        ></DropDown>
+                                    </td>
+                                ))}
+                            </tr>
+                            {peopleExtra.map((_, personIndex) => (
+                                <tr key={`${mealIndex}-${personIndex}`}>
+                                    {daysOfWeek.map((_, dayIndex) => (
+                                    <td 
+                                        key={`${mealIndex + 1}-${personIndex}-${dayIndex}`} 
+                                        className={personIndex === peopleExtra.length-1 ? "personCellBottom":"personCellMiddle"} 
+                                        style={{backgroundColor: tableColors[personIndex+1]}}>
+                                            <DropDown 
+                                            label="" 
+                                            type={"light"}
+                                            options={recipeOptions} 
+                                            defaultOption=''
+                                            onOptionSelect={(newValue) => handleRecipeSelect(mealIndex, dayIndex, personIndex, false, newValue)}
+                                        ></DropDown>
+                                        </td>
+                                ))}
+                                </tr>
+                            ))}
+                        </React.Fragment>
+                    ))}
+                </tbody>
+            </table>
+        </div>  
         <div className="p-4 max-w-md mx-auto">
         <h2 className="text-xl font-semibold mb-4">Grocery List</h2>
         <ul>
@@ -247,11 +288,11 @@ function MealPlan() {
             <li key={ingredient} className="flex justify-between border-b py-2">
                 {Number(quantity) > 0 ? (
                     <React.Fragment key={ingredient}>
-                        <span className="font-medium">{ingredient}: </span>
+                        <span className="font-medium"><strong>{ingredient}: </strong></span>
                         <span>{String(quantity)}</span>
                     </React.Fragment>
                 ) : (
-                    <span className="font-medium">{ingredient} </span>
+                    <span className="font-medium"><strong>{ingredient} </strong></span>
                 )}
             </li>
             ))}

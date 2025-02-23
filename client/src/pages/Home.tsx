@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Button from "../components/Button.tsx" 
 import axios from "axios";
-import '../styles/App.css'
+
 
 function Home() {
     interface RecipeDetails {

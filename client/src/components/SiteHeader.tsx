@@ -6,11 +6,9 @@ function SiteHeader() {
         <>
           <nav className="navbar">
             <div className="navbar-brand">
-                <Link to="/">Meal Planner</Link>
+                <h2 className="title">Household Meal Planner</h2>
             </div>
             <div className="navbar-links">
-                <Link to="/" className="nav-link">Home </Link> 
-                <Link to="/recipes" className="nav-link">Recipes</Link> 
                 <Link to="/mealplan" className="nav-link">Meal Plan</Link> 
             </div>
           </nav>
