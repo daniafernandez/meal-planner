@@ -1,33 +1,47 @@
 table {
   width: 100%;
   border-collapse: collapse; /* Ensures borders don't double up */
-}
-
-th, td {
-  border: 1px solid black !important; 
-  padding: 8px;
+  border-radius: 15px;
+  border-color: #EF626C;
   text-align: center;
 }
 
+.tableRound {
+border-radius: 30px;
+padding: 10px;
+background-color: #EF626C;
+
+}
+th, td {
+  border: 1px solid #EF626C !important; 
+  padding: 8px;
+  text-align: center;
+  border-radius: 15px;
+  
+}
+
 th {
-  background-color: lightgray; /* Light gray background for headers */
+  background-color: #EF626C; /* Light gray background for headers */
+  color: #F8F8FF;
+  border-color: #EF626C;
+  border-radius: 15px;
 }
 
 .personCellTop {
-  border-left: 2px solid black !important; 
-  border-right: 2px solid black !important; 
-  border-top: 2px solid black !important; 
+  border-left: 2px solid #EF626C !important; 
+  border-right: 2px solid #EF626C !important; 
+  border-top: 2px solid #EF626C !important; 
 }
 
 .personCellMiddle {
-  border-left: 2px solid black !important; 
-  border-right: 2px solid black !important; 
+  border-left: 2px solid #EF626C !important; 
+  border-right: 2px solid #EF626C !important; 
 }
 
 .personCellBottom {
-  border-left: 2px solid black !important; 
-  border-right: 2px solid black !important; 
-  border-bottom: 2px solid black !important; 
+  border-left: 2px solid #EF626C !important; 
+  border-right: 2px solid #EF626C !important; 
+  border-bottom: 2px solid #EF626C !important; 
 }
 
 .main-content {
