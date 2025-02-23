@@ -41,7 +41,6 @@ def recipes():
 def insert_recipe():
     data = request.get_json()
 
-    # Ensure required fields are present
     if not data or "name" not in data or "serves" not in data or "ingredients" not in data:
         return jsonify({"error": "Missing required fields"}), 400
 
@@ -72,7 +71,6 @@ def insert_recipe():
         else:
             ingredient_id = ingredient["_id"]
 
-            # Append ingredient reference for the recipe
         ingredient_ids.append({"ingredient_id": ingredient_id, "quantity": ingredient_quantity})
 
     db.recipe_book.insert_one({
