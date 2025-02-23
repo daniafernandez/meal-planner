@@ -7,7 +7,7 @@ table {
 }
 
 .tableRound {
-border-radius: 30px;
+border-radius: 20px;
 padding: 10px;
 background-color: #EF626C;
 
@@ -66,7 +66,28 @@ th {
 }
 
 .dropdownContainer {
-  display: flex;
-  align-items: center; 
-  gap: 10px;
+  position: relative; /* Ensures absolute positioning is relative to this container */
+  display: inline-block; /* Keeps it from stretching the full width */
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%; /* Moves it directly below the button */
+  left: 0;
+  z-index: 1000; /* Ensures it's above other elements */
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-height: 200px; /* Prevents it from getting too large */
+  overflow-y: auto; /* Enables scrolling if there are too many options */
+  display: none; /* Hide by default */
+}
+
+.dropdown-menu.show {
+  display: block; /* Show when dropdown is open */
+}
+
+.has-label {
+  margin-left: 10px;
 }

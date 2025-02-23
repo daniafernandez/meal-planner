@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 interface Props {
-    label: string;
+    label?: string;
     type?: 'primary' | 'secondary' | 'danger' | 'success' | 'close' | 'link' | 'light';
     options: string[];
     defaultOption: string;
@@ -19,12 +19,14 @@ interface Props {
         setIsOpen(!isOpen);
     };
 
+    const hasLabel = label ? "has-label" : "";
+
     return (
         <>
         <div className="dropdownContainer">
             {label}
             <button
-                className={`btn btn-${type} dropdown-toggle`}
+                className={`btn btn-${type} dropdown-toggle ${hasLabel}`}
                 onClick={() => setIsOpen(!isOpen)}
                 aria-haspopup="true"
                 aria-expanded={isOpen}
