@@ -1,4 +1,5 @@
 import React from "react";
+import '../styles/Modal.css';
 
 interface ModalProps {
   isOpen: boolean;
@@ -7,22 +8,19 @@ interface ModalProps {
   children: React.ReactNode;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
+function Modal({ isOpen, onClose, title, children }: ModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold">{title}</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-            ✖
-          </button>
-        </div>
-        <div>{children}</div>
-      </div>
+    <div className="modal-overlay">
+      <div className="modal-content">
+        {children}
+        <button onClick={onClose}>Close</button>
+      </div>   
     </div>
   );
-};
+}
 
 export default Modal;
+
+
