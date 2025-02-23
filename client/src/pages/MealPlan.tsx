@@ -173,6 +173,46 @@ function MealPlan() {
 
     return (
         <>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <button
+                onClick={() => {
+                    console.log("opening modal...")
+                    setIsModalOpen(true);
+                    console.log(isModalOpen);
+                }}
+                className='btn btn-primary'
+            >
+                Edit Members
+            </button>
+        </div>
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Edit Members of Your Household">
+            <DropDown 
+                label="Number of People" 
+                options={numPeopleOptions} 
+                defaultOption={numPeopleDefaultOption} 
+                onOptionSelect={handleOptionSelect}
+            ></DropDown>
+            {Array.from({ length: parseInt(selectedNumPeopleOption) }, (_, index) => (
+                <div key={index} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <React.Fragment key={index}>
+                        <TextInput 
+                            key={index} 
+                            label={`Person ${index + 1} Name:`} 
+                            value={people[index] || ""}
+                            onChange={(newValue) => handlePersonChange(index, newValue)}
+                        />
+                        <DropDown 
+                        label=""
+                        options={pastelColors} 
+                        defaultOption={colorDefault} 
+                        onOptionSelect={(newValue) => handleColorSelect(index, newValue)}></DropDown>
+                    </React.Fragment>
+                    </div>
+            ))}
+            <button onClick={() => setIsModalOpen(false)}  className='btn btn-secondary'>
+            Done
+            </button>
+        </Modal>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
         {people.map((person, personIndex) => (
                 <React.Fragment key={personIndex}>
@@ -237,30 +277,7 @@ function MealPlan() {
                     ))}
                 </tbody>
             </table>
-        </div>
-        <DropDown 
-            label="Number of People" 
-            options={numPeopleOptions} 
-            defaultOption={numPeopleDefaultOption} 
-            onOptionSelect={handleOptionSelect}
-        ></DropDown>
-        {Array.from({ length: parseInt(selectedNumPeopleOption) }, (_, index) => (
-            <div key={index} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <React.Fragment key={index}>
-                    <TextInput 
-                        key={index} 
-                        label={`Person ${index + 1} Name:`} 
-                        value={people[index] || ""}
-                        onChange={(newValue) => handlePersonChange(index, newValue)}
-                    />
-                    <DropDown 
-                    label=""
-                    options={pastelColors} 
-                    defaultOption={colorDefault} 
-                    onOptionSelect={(newValue) => handleColorSelect(index, newValue)}></DropDown>
-                </React.Fragment>
-                </div>
-        ))}
+        </div>  
         <div className="p-4 max-w-md mx-auto">
         <h2 className="text-xl font-semibold mb-4">Grocery List</h2>
         <ul>
@@ -277,21 +294,6 @@ function MealPlan() {
             </li>
             ))}
         </ul>
-        </div>
-        <div className="flex flex-col items-center mt-10">
-            <button
-                onClick={() => setIsModalOpen(true)}
-                className='btn btn-primary'
-            >
-                Edit Members
-            </button>
-
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Edit Members of Your Household">
-                <p>This is a simple modal!</p>
-                <button onClick={() => setIsModalOpen(false)}  className='btn btn-secondary'>
-                Done
-                </button>
-            </Modal>
         </div>
             
         </>
