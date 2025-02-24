@@ -95,11 +95,42 @@ function Recipes() {
                   }))
                 }
               />
+              <p>{ingredient.quantity}</p>
+              <button
+                  onClick={() => {
+                    const newQuantity = Number(ingredient.quantity) + 0.25
+                    setRecipeDraft((prev) => ({
+                      ...prev,
+                      ingredients: prev.ingredients.map((ing, i) =>
+                        i === index ? { ...ing, quantity: newQuantity } : ing
+                      )
+                    }))
+                  }} 
+                  disabled={ingredient.quantity > 100? true : undefined}      
+                  className='btn btn-secondary'
+              >
+                  +
+              </button>
+              <button
+                  onClick={() => {
+                    const newQuantity = Number(ingredient.quantity) - 0.25
+                    setRecipeDraft((prev) => ({
+                      ...prev,
+                      ingredients: prev.ingredients.map((ing, i) =>
+                        i === index ? { ...ing, quantity: newQuantity } : ing
+                      )
+                    }))
+                  }}      
+                  disabled={ingredient.quantity <= 0.25? true : undefined}   
+                  className='btn btn-secondary'
+              >
+                  -
+              </button>
               <button
                   onClick={() => {
                     setRecipeDraft((prev) => ({
                       ...prev,
-                      ingredients: prev.ingredients.filter((_, i) => i !== index) // Remove ingredient at index
+                      ingredients: prev.ingredients.filter((_, i) => i !== index) 
                     }));
                   }}       
                   className='btn btn-danger'
