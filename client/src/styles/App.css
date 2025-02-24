@@ -91,3 +91,15 @@ th {
 .has-label {
   margin-left: 10px;
 }
+
+.ingredientInputList {
+  display: flex;
+  flex-direction: column; /* Ensures each pair stacks below the other */
+  gap: 10px; /* Adds space between each ingredient row */
+}
+
+.ingredientInput {
+  display: flex;
+  align-items: center; /* Aligns input and button vertically */
+  gap: 10px; /* Adds space between input and button */
+}
