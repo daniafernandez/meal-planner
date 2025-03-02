@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
+from bson import ObjectId
+
 
 recipe_handler = Blueprint('recipe_handler', __name__)
 
@@ -23,20 +25,34 @@ except Exception as e:
 @cross_origin()
 def recipes():
     db = client.meal_planner
-    my_collection = db['recipe_book']
-    result = my_collection.find()
+    recipe_collection = db['recipe_book']
+    result = recipe_collection.find()
 
-    if result:
-        recipe_book = []
-        for doc in result:
-            name = doc['name']
-            serves = doc['serves']
-            ingredients = doc['ingredients']
-            recipe_book.append({"name": name, "serves": serves, "ingredients": ingredients})
+    if not result:
+        return jsonify([])
 
-    return recipe_book
+    ingredient_collection = db['ingredient_store']
 
-@recipe_handler.route("/insertRecipe", methods=["POST"])
+    recipe_book = []
+    for doc in result:
+        name = doc['name']
+        serves = doc['serves']
+        ingredient_ids = doc['ingredients']
+
+        ingredient_details = []
+        for ingredient in ingredient_ids:
+            ingredient_doc = ingredient_collection.find_one({"_id": ObjectId(ingredient["ingredient_id"])})
+            ingredient_details.append({
+                "name": ingredient_doc["name"],
+                "units": ingredient_doc.get("units", "units"),
+                "quantity": ingredient.get("quantity", 1)  # get quantity from recipe
+            })
+
+        recipe_book.append({"name": name, "serves": serves, "ingredients": ingredient_details})
+
+    return jsonify(recipe_book)
+
+@recipe_handler.route("/addRecipe", methods=["POST"])
 @cross_origin()
 def insert_recipe():
     data = request.get_json()
@@ -56,22 +72,23 @@ def insert_recipe():
     ingredient_ids = []
 
     for ingredient_item in ingredient_items:
-        ingredient_name = ingredient_item["name"]
+        ingredient_name = ingredient_item["name"].strip().lower()
         ingredient_units = ingredient_item["units"]
         ingredient_quantity = ingredient_item["quantity"]
 
-        ingredient = db.ingredient_store.find_one({"name": ingredient_name})
-        if not ingredient:
-            new_ingredient = {
-                "name": ingredient_name,
-                "units": ingredient_units
-            }
-            ingredient_inserted = db.ingredient_store.insert_one(new_ingredient)
-            ingredient_id = ingredient_inserted.inserted_id
-        else:
-            ingredient_id = ingredient["_id"]
+        if ingredient_name:
+            ingredient = db.ingredient_store.find_one({"name": ingredient_name})
+            if not ingredient:
+                new_ingredient = {
+                    "name": ingredient_name,
+                    "units": ingredient_units
+                }
+                ingredient_inserted = db.ingredient_store.insert_one(new_ingredient)
+                ingredient_id = ingredient_inserted.inserted_id
+            else:
+                ingredient_id = ingredient["_id"]
 
-        ingredient_ids.append({"ingredient_id": ingredient_id, "quantity": ingredient_quantity})
+            ingredient_ids.append({"ingredient_id": ingredient_id, "quantity": ingredient_quantity})
 
     db.recipe_book.insert_one({
         "name": name,
@@ -79,6 +96,6 @@ def insert_recipe():
         "ingredients": ingredient_ids
     })
 
-    return jsonify({"message": "Recipe added successfully!"}), 201
+    return jsonify({"message": f"Recipe '{name}' saved to your Recipe Book!"}), 201
 
 db = client.meal_planner

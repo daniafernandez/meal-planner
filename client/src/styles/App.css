@@ -92,14 +92,24 @@ th {
   margin-left: 10px;
 }
 
+.recipeEeditorContainer {
+  gap: 15px;
+
+}
+
+.editorHeading {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 20% 12% 8% 10% 50%;
+}
+
 .ingredientInputList {
-  display: flex;
-  flex-direction: column; /* Ensures each pair stacks below the other */
-  gap: 10px; /* Adds space between each ingredient row */
+  gap: 10px;
 }
 
 .ingredientInput {
-  display: flex;
-  align-items: center; /* Aligns input and button vertically */
-  gap: 10px; /* Adds space between input and button */
+  align-items: center;
+  gap: 10px; 
+  display: grid;
+  grid-template-columns: 20% 12% 8% 10% 50%;
 }

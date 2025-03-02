@@ -33,11 +33,12 @@ def grocery_list():
         recipe_multiplier = servings_needed / recipe_servings
 
         for ingredient in recipe_book[recipe][0]:
-            ingredient_name = ingredient[0]
-            ingredient_quantity = ingredient[1]
+            ingredient_name = ingredient['name']
+            ingredient_quantity = ingredient['quantity']
+            ingredient_units = ingredient['units']
             if ingredient_name not in ingredients_quantities_dict:
-                ingredients_quantities_dict[ingredient_name] = round(ingredient_quantity * recipe_multiplier, 2)
+                ingredients_quantities_dict[ingredient_name] = [round(ingredient_quantity * recipe_multiplier, 2), ingredient_units]
             else:
-                ingredients_quantities_dict[ingredient[0]] += round(ingredient_quantity * recipe_multiplier, 2)
+                ingredients_quantities_dict[ingredient_name][0] += round(ingredient_quantity * recipe_multiplier, 2)
 
     return ingredients_quantities_dict

@@ -109,7 +109,7 @@ function MealPlan() {
     const [cook, setCook] = useState<string>(people[0] || "");
     const [tableColors, setTableColors] = useState<string[]>(Array(parseInt(numPeopleDefaultOption)).fill(colorDefault)); 
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
 
     const handleOptionSelect = (option: string) => {
